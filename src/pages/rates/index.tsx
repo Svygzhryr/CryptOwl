@@ -1,4 +1,3 @@
-import { useGetAllCoinsQuery } from '../../redux/apiSlice'
 import {
   ButtonNext,
   ButtonPrev,
@@ -12,24 +11,20 @@ import {
   RatesWrapper,
 } from './style'
 import { Loader } from '../../components/loader'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectPage } from '../../redux/selectors'
-import { nextPage, prevPage } from '../../redux/basicSlice'
+import basicStore from '../../mobx/basic-store'
+import { observer } from 'mobx-react-lite'
+import apiStore from '../../mobx/api-store'
 
-export const Rates = () => {
-  const currentPage = useSelector(selectPage)
-  const dispatch = useDispatch()
-  const { data, isLoading, isFetching } = useGetAllCoinsQuery({
-    start: currentPage * 10,
-    limit: 10,
-  })
+export const Rates = observer(() => {
+  const { currentPage, nextPage, prevPage } = basicStore
+  const { data, getData } = apiStore
 
   const handlePrev = () => {
-    dispatch(prevPage())
+    prevPage()
   }
 
   const handleNext = () => {
-    dispatch(nextPage())
+    nextPage()
   }
 
   return (
@@ -55,12 +50,12 @@ export const Rates = () => {
           </Container>
         )
       )}
-      <ButtonPrev disabled={isFetching} onClick={handlePrev}>
+      <ButtonPrev disabled={isLoading} onClick={handlePrev}>
         <div></div>
       </ButtonPrev>
-      <ButtonNext disabled={isFetching} onClick={handleNext}>
+      <ButtonNext disabled={isLoading} onClick={handleNext}>
         <div></div>
       </ButtonNext>
     </RatesWrapper>
   )
-}
+})

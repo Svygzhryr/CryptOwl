@@ -1,17 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux'
 import { SwitchButton } from './style'
-import { switchTheme } from '../../redux/basicSlice'
 import sun from '../../assets/sun.svg'
 import moon from '../../assets/moon.svg'
-import { selectTheme } from '../../redux/selectors'
+
+const theme = 'darkTheme'
 
 export const ThemeSwitch = () => {
-  const dispatch = useDispatch()
-  const theme = useSelector(selectTheme)
-
-  const changeTheme = () => {
-    dispatch(switchTheme())
-  }
+  const changeTheme = () => {}
 
   return (
     <SwitchButton onClick={changeTheme}>

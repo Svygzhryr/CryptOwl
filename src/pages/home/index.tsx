@@ -9,34 +9,47 @@ import {
   Markets,
   Title,
 } from './styles'
-import {
-  useGetAllMarketsQuery,
-  useGetGlobalStatsQuery,
-} from '../../redux/apiSlice'
 import { globalStatDesc, globalStatKeys } from '../../utils/globalStats'
 import { Loader } from '../../components/loader'
 import link from '../../assets/link.svg'
 import linklight from '../../assets/link-light.svg'
-import { selectTheme } from '../../redux/selectors'
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
+import ApiStore from '../../mobx/api-store'
+import { endpoints } from '../../utils/api'
+import themeStore from '../../mobx/theme-store'
 
-const Home = () => {
-  const { data: statsData, isLoading: statsIsLoading } =
-    useGetGlobalStatsQuery()
-  const { data: marketData, isLoading: marketIsLoading } =
-    useGetAllMarketsQuery()
-  const theme = useSelector(selectTheme)
+const globalStats = new ApiStore()
+const marketStats = new ApiStore()
+
+const Home = observer(() => {
+  const { theme } = themeStore
+  const {
+    data: globalData,
+    getData: getGlobalData,
+    isLoading: isGlobalStatsLoading,
+  } = globalStats
+
+  const {
+    data: marketData,
+    getData: getMarketData,
+    isLoading: isMarketStatsLoading,
+  } = marketStats
+
+  useEffect(function () {
+    getGlobalData(endpoints.global)
+  }, [])
 
   return (
     <Container>
       <Title>Global stats</Title>
-      {statsIsLoading ? (
+      {isGlobalStatsLoading ? (
         <Loader />
       ) : (
-        statsData && (
+        globalData && (
           <Grid>
-            {Object.keys(statsData).map((key, index) => {
-              const values = Object.values(statsData)
+            {Object.keys(globalData).map((key, index) => {
+              const values = Object.values(globalData)
               if (!values[index]) return
               let type
               if (globalStatKeys[index].includes('Change')) {
@@ -60,7 +73,7 @@ const Home = () => {
       )}
       <Title>Top markets</Title>
 
-      {marketIsLoading ? (
+      {isMarketStatsLoading ? (
         <Loader />
       ) : (
         marketData && (
@@ -87,6 +100,6 @@ const Home = () => {
       )}
     </Container>
   )
-}
+})
 
 export default Home
