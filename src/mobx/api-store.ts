@@ -3,7 +3,7 @@ import { getData } from '../utils/api'
 
 class ApiStore {
   baseUrl: string = 'https://api.coinlore.net/api/'
-  data: Promise<any> | null = null
+  data: unknown | null = null
   isLoading: boolean = false
 
   constructor() {
@@ -11,7 +11,7 @@ class ApiStore {
   }
 
   getData = async (endpoint: string) => {
-    this.data = getData(this.baseUrl + endpoint, this.isLoading)
+    this.data = await getData(this.baseUrl + endpoint, this.isLoading)
   }
 }
 

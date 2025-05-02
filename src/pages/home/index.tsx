@@ -38,6 +38,9 @@ const Home = observer(() => {
 
   useEffect(function () {
     getGlobalData(endpoints.global)
+    getMarketData(endpoints.exchanges)
+
+    console.log(globalData)
   }, [])
 
   return (
@@ -48,7 +51,7 @@ const Home = observer(() => {
       ) : (
         globalData && (
           <Grid>
-            {Object.keys(globalData).map((key, index) => {
+            {Object.keys(globalData[0]).map((key, index) => {
               const values = Object.values(globalData)
               if (!values[index]) return
               let type
@@ -78,8 +81,8 @@ const Home = observer(() => {
       ) : (
         marketData && (
           <Markets>
-            {marketData.map((market) => {
-              const { name, country, volume_usd, url } = market
+            {Object.keys(marketData).map((market) => {
+              const { name, country, volume_usd, url } = marketData[market]
               return (
                 <MarketItem href={market.url} key={name}>
                   <div>

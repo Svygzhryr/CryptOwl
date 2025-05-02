@@ -6,10 +6,10 @@ export const endpoints = {
   },
 }
 
-export async function getData<T>(
+export async function getData(
   url: string,
   isLoading: boolean
-): Promise<T[] | null> {
+): Promise<T | null> {
   let result
 
   try {
@@ -23,5 +23,7 @@ export async function getData<T>(
 
   if (!result) return null
 
-  return result.json()
+  const json = await result.json()
+
+  return json
 }
