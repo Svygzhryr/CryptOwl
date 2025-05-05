@@ -1,3 +1,9 @@
+import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
+import { Loader } from '../../components/loader'
+import { default as apiStore, default as ApiStore } from '../../mobx/api-store'
+import basicStore from '../../mobx/basic-store'
+import { endpoints } from '../../utils/api'
 import {
   ButtonNext,
   ButtonPrev,
@@ -8,16 +14,15 @@ import {
   CoinSymbol,
   CoinWrapper,
   Container,
-  RatesWrapper,
+  RatesWrapper
 } from './style'
-import { Loader } from '../../components/loader'
-import basicStore from '../../mobx/basic-store'
-import { observer } from 'mobx-react-lite'
-import apiStore from '../../mobx/api-store'
+import { ICoin } from '../../types/api'
+
+const ratesData = new ApiStore()
 
 export const Rates = observer(() => {
   const { currentPage, nextPage, prevPage } = basicStore
-  const { data, getData } = apiStore
+  const { data: ratesStats, getData, isLoading } = ratesData
 
   const handlePrev = () => {
     prevPage()
@@ -27,15 +32,19 @@ export const Rates = observer(() => {
     nextPage()
   }
 
+  useEffect(() => {
+    getData(endpoints.coins(currentPage * 10, 10))
+  }, [])
+
   return (
     <RatesWrapper>
       {isLoading ? (
         <Loader />
       ) : (
-        data && (
+        ratesStats && (
           <Container>
             <ul>
-              {data.map((coin) => (
+              {ratesStats.map((coin) => (
                 <CoinWrapper key={coin.name}>
                   <CoinNumber>{coin.rank}</CoinNumber>
                   <CoinSymbol>{coin.symbol}</CoinSymbol>

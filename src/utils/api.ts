@@ -3,10 +3,10 @@ export const endpoints = {
   exchanges: 'exchanges/',
   coins(start: number, limit: number) {
     return `tickers/?start=${start}&limit=${limit}`
-  },
+  }
 }
 
-export async function getData(
+export async function getData<T>(
   url: string,
   isLoading: boolean
 ): Promise<T | null> {
@@ -24,6 +24,8 @@ export async function getData(
   if (!result) return null
 
   const json = await result.json()
+
+  console.log(json)
 
   return json
 }

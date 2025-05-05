@@ -1,3 +1,12 @@
+import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
+import linklight from '../../assets/link-light.svg'
+import link from '../../assets/link.svg'
+import { Loader } from '../../components/loader'
+import ApiStore from '../../mobx/api-store'
+import themeStore from '../../mobx/theme-store'
+import { endpoints } from '../../utils/api'
+import { globalStatDesc, globalStatKeys } from '../../utils/globalStats'
 import {
   Container,
   Grid,
@@ -7,17 +16,9 @@ import {
   GridItemValue,
   MarketItem,
   Markets,
-  Title,
+  Title
 } from './styles'
-import { globalStatDesc, globalStatKeys } from '../../utils/globalStats'
-import { Loader } from '../../components/loader'
-import link from '../../assets/link.svg'
-import linklight from '../../assets/link-light.svg'
-import { useEffect } from 'react'
-import { observer } from 'mobx-react-lite'
-import ApiStore from '../../mobx/api-store'
-import { endpoints } from '../../utils/api'
-import themeStore from '../../mobx/theme-store'
+import { IMarketData } from '../../types/api'
 
 const globalStats = new ApiStore()
 const marketStats = new ApiStore()
@@ -27,20 +28,18 @@ const Home = observer(() => {
   const {
     data: globalData,
     getData: getGlobalData,
-    isLoading: isGlobalStatsLoading,
+    isLoading: isGlobalStatsLoading
   } = globalStats
 
   const {
     data: marketData,
     getData: getMarketData,
-    isLoading: isMarketStatsLoading,
+    isLoading: isMarketStatsLoading
   } = marketStats
 
   useEffect(function () {
     getGlobalData(endpoints.global)
     getMarketData(endpoints.exchanges)
-
-    console.log(globalData)
   }, [])
 
   return (
@@ -52,8 +51,8 @@ const Home = observer(() => {
         globalData && (
           <Grid>
             {Object.keys(globalData[0]).map((key, index) => {
-              const values = Object.values(globalData)
-              if (!values[index]) return
+              const values = Object.values(globalData[0])
+              if (!values[index] || key.includes('ath')) return
               let type
               if (globalStatKeys[index].includes('Change')) {
                 values[index][0] === '-' ? (type = 'fall') : (type = 'rise')
@@ -82,7 +81,9 @@ const Home = observer(() => {
         marketData && (
           <Markets>
             {Object.keys(marketData).map((market) => {
-              const { name, country, volume_usd, url } = marketData[market]
+              const { name, country, volume_usd, url } = marketData[
+                market
+              ] as IMarketData
               return (
                 <MarketItem href={market.url} key={name}>
                   <div>

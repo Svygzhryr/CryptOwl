@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx'
 import { getData } from '../utils/api'
+import { ICoin, IGlobalData, IMarketData } from '../types/api'
 
 class ApiStore {
   baseUrl: string = 'https://api.coinlore.net/api/'
-  data: unknown | null = null
+  data: IGlobalData[] | IMarketData[] | ICoin[] | null = null
   isLoading: boolean = false
 
   constructor() {
