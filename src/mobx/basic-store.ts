@@ -7,11 +7,11 @@ class BasicStore {
     makeAutoObservable(this)
   }
 
-  nextPage() {
+  nextPage = () => {
     this.currentPage += 1
   }
 
-  prevPage() {
+  prevPage = () => {
     this.currentPage -= 1
   }
 }

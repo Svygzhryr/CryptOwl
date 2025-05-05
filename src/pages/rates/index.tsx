@@ -16,7 +16,6 @@ import {
   Container,
   RatesWrapper
 } from './style'
-import { ICoin } from '../../types/api'
 
 const ratesData = new ApiStore()
 
@@ -34,7 +33,7 @@ export const Rates = observer(() => {
 
   useEffect(() => {
     getData(endpoints.coins(currentPage * 10, 10))
-  }, [])
+  }, [currentPage])
 
   return (
     <RatesWrapper>
@@ -44,7 +43,7 @@ export const Rates = observer(() => {
         ratesStats && (
           <Container>
             <ul>
-              {ratesStats.map((coin) => (
+              {ratesStats.data.map((coin) => (
                 <CoinWrapper key={coin.name}>
                   <CoinNumber>{coin.rank}</CoinNumber>
                   <CoinSymbol>{coin.symbol}</CoinSymbol>
