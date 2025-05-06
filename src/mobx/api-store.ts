@@ -1,24 +1,16 @@
 import { makeAutoObservable } from 'mobx'
 import { getData } from '../utils/api'
-import {
-  IAllCoinsResponse,
-  ICoin,
-  IGlobalData,
-  IMarketData
-} from '../types/api'
 
-class ApiStore {
+class ApiStore<T> {
   baseUrl: string = 'https://api.coinlore.net/api/'
-  data: IGlobalData[] | IMarketData[] | ICoin[] | IAllCoinsResponse | null =
-    null
-  isLoading: boolean = false
+  data: T | null = null
 
   constructor() {
     makeAutoObservable(this)
   }
 
   getData = async (endpoint: string) => {
-    this.data = await getData(this.baseUrl + endpoint, this.isLoading)
+    this.data = await getData(this.baseUrl + endpoint)
   }
 }
 

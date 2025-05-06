@@ -6,26 +6,18 @@ export const endpoints = {
   }
 }
 
-export async function getData<T>(
-  url: string,
-  isLoading: boolean
-): Promise<T | null> {
+export async function getData<T>(url: string): Promise<T | null> {
   let result
 
   try {
-    isLoading = true
     result = await fetch(url)
   } catch (err) {
     console.error(err)
-  } finally {
-    isLoading = false
   }
 
   if (!result) return null
 
   const json = await result.json()
-
-  console.log(json)
 
   return json
 }
