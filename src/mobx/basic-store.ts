@@ -1,19 +1,15 @@
-import { makeAutoObservable } from 'mobx'
+import { create } from 'zustand'
 
-class BasicStore {
-  currentPage = 0
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-
-  nextPage = () => {
-    this.currentPage += 1
-  }
-
-  prevPage = () => {
-    this.currentPage -= 1
-  }
+type Store = {
+  currentPage: number
+  nextPage: () => void
+  prevPage: () => void
 }
 
-export default new BasicStore()
+const useBasicStore = create<Store>((set) => ({
+  currentPage: 0,
+  nextPage: () => set((state) => ({ currentPage: (state.currentPage += 1) })),
+  prevPage: () => set((state) => ({ currentPage: (state.currentPage -= 1) }))
+}))
+
+export default useBasicStore

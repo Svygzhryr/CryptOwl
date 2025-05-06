@@ -1,17 +1,18 @@
-import { makeAutoObservable } from 'mobx'
+import { create } from 'zustand'
 
-class ThemeStore {
-  theme: 'darkTheme' | 'lightTheme' = 'darkTheme'
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-
-  switchTheme = () => {
-    if (this.theme === 'darkTheme') {
-      this.theme = 'lightTheme'
-    } else this.theme = 'darkTheme'
-  }
+type Store = {
+  theme: 'darkTheme' | 'lightTheme'
+  switchTheme: () => void
 }
 
-export default new ThemeStore()
+const useThemeStore = create<Store>((set) => ({
+  theme: 'darkTheme',
+  switchTheme: () =>
+    set((state) =>
+      state.theme === 'darkTheme'
+        ? { theme: 'lightTheme' }
+        : { theme: 'darkTheme' }
+    )
+}))
+
+export default useThemeStore

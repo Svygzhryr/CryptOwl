@@ -3,9 +3,6 @@ import { useEffect } from 'react'
 import linklight from '../../assets/link-light.svg'
 import link from '../../assets/link.svg'
 import { Loader } from '../../components/loader'
-import ApiStore from '../../mobx/api-store'
-import themeStore from '../../mobx/theme-store'
-import { endpoints } from '../../utils/api'
 import { globalStatDesc, globalStatKeys } from '../../utils/globalStats'
 import {
   Container,
@@ -18,20 +15,16 @@ import {
   Markets,
   Title
 } from './styles'
-import { IGlobalData, IMarkets } from '../../types/api'
-
-const globalStats = new ApiStore<IGlobalData[]>()
-const marketStats = new ApiStore<IMarkets>()
+import useThemeStore from '../../mobx/theme-store'
+import useApiStore from '../../mobx/api-store'
 
 const Home = observer(() => {
-  const { theme } = themeStore
-  const { data: globalData, getData: getGlobalData } = globalStats
-
-  const { data: marketData, getData: getMarketData } = marketStats
+  const { theme } = useThemeStore()
+  const { getGlobalData, getMarketData, globalData, marketData } = useApiStore()
 
   useEffect(function () {
-    getGlobalData(endpoints.global)
-    getMarketData(endpoints.exchanges)
+    getGlobalData()
+    getMarketData()
   }, [])
 
   return (

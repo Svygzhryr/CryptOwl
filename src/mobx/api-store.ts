@@ -1,17 +1,38 @@
-import { makeAutoObservable } from 'mobx'
-import { getData } from '../utils/api'
+import { IAllCoinsResponse, ICoin, IGlobalData, IMarkets } from '../types/api'
+import { endpoints, getData } from '../utils/api'
+import { create } from 'zustand'
 
-class ApiStore<T> {
-  baseUrl: string = 'https://api.coinlore.net/api/'
-  data: T | null = null
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-
-  getData = async (endpoint: string) => {
-    this.data = await getData(this.baseUrl + endpoint)
-  }
+type Store = {
+  globalData: IGlobalData[] | null
+  marketData: IMarkets | null
+  coinData: IAllCoinsResponse | null
+  getGlobalData: () => void
+  getMarketData: () => void
+  getCoinData: (start: number, limit: number) => void
 }
 
-export default ApiStore
+const useApiStore = create<Store>((set) => ({
+  globalData: null,
+  marketData: null,
+  coinData: null,
+  getGlobalData: async () =>
+    set({
+      globalData: await getData(
+        'https://api.coinlore.net/api/' + endpoints.global
+      )
+    }),
+  getMarketData: async () =>
+    set({
+      marketData: await getData(
+        'https://api.coinlore.net/api/' + endpoints.exchanges
+      )
+    }),
+  getCoinData: async (start, limit) =>
+    set({
+      coinData: await getData(
+        'https://api.coinlore.net/api/' + endpoints.coins(start, limit)
+      )
+    })
+}))
+
+export default useApiStore

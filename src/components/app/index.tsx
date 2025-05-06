@@ -8,12 +8,13 @@ import { AppWrapper } from '../../styles/main'
 import { darkTheme, lightTheme } from '../../styles/theme'
 import { Header } from '../header'
 import { observer } from 'mobx-react-lite'
+import useThemeStore from '../../mobx/theme-store'
 
 export const App = observer(() => {
-  const { theme } = themeStore
+  const { theme } = useThemeStore()
   const themes = {
     lightTheme,
-    darkTheme,
+    darkTheme
   }
 
   return (
