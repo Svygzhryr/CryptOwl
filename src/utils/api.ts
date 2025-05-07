@@ -12,7 +12,7 @@ export async function getData<T>(url: string): Promise<T | null> {
   try {
     result = await fetch(url)
   } catch (err) {
-    console.error(err)
+    throw new Error(err as string)
   }
 
   if (!result) return null

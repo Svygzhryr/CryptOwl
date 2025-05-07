@@ -29,6 +29,10 @@ const Home = observer(() => {
 
   const { data: marketData, getData: getMarketData } = marketStats
 
+  const convertUsd = (amount: number): string => {
+    return new Intl.NumberFormat('en-US').format(+amount.toFixed(0)) + '$'
+  }
+
   useEffect(function () {
     getGlobalData(endpoints.global)
     getMarketData(endpoints.exchanges)
@@ -69,11 +73,12 @@ const Home = observer(() => {
         <Markets>
           {Object.keys(marketData).map((market) => {
             const { name, country, volume_usd, url } = marketData[market]
+            if (volume_usd <= 0) return
             return (
               <MarketItem href={url} key={name}>
                 <div>
                   <h2>{name}</h2>
-                  <h2>{new Intl.NumberFormat('en-US').format(volume_usd)} $</h2>
+                  <h2>{convertUsd(volume_usd)}</h2>
                   <h2>{country || 'N/A'}</h2>
                 </div>
                 <a target="_blank" href={url}>
